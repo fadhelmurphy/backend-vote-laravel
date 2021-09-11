@@ -23,7 +23,6 @@ class LinkManager extends Controller
         $lookup = array();
         $result = array();
         $items = VoteLink::all();
-        Log::channel('stderr')->info($items);
         foreach ($items as $item) {
             $name = $item['votename'];
             $url = $item['id_url'];
@@ -88,6 +87,8 @@ class LinkManager extends Controller
     public function show($id)
     {
         $vote = VoteLink::select("id", "id_url", "id_vote", "votename")->where("id_url", $id)->get();
+
+        Log::channel('stderr')->info($vote);
         return response()->json([
             'vote' => $vote
         ]);

@@ -33,7 +33,7 @@ class Register extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required',
-            'c_password' => 'required|same:password',
+            // 'c_password' => 'required|same:password',
         ]);
 
         if($validator->fails()){

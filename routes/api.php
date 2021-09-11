@@ -32,6 +32,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/update', [VoteCRUD::class, 'update']);
     Route::get('/delete/{id}', [VoteCRUD::class, 'destroy']);
     Route::post('/bulkdelete', [VoteCRUD::class, 'bulkDestroy']);
+    Route::post('/sendvote', [VoteCRUD::class, 'store']);
+    Route::post('/deletevoter', [VoteCRUD::class, 'destroyVoter']);
 
     Route::post('/generate/private', [LinkManager::class, 'create']);
     Route::get('/getlink/{id}', [LinkManager::class, 'show']);
