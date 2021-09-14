@@ -183,6 +183,7 @@ class VoteCRUD extends Controller
             // Log::channel('stderr')->info($VoteResults);
             $jumlahVoters = [];
             $jumlahkandidat = [];
+            $voterCanVote = null;
             foreach ($VoteResults as $el) {
                 $jumlahkandidat[$el->candidate] = (isset($jumlahkandidat[$el->candidate]) ? $jumlahkandidat[$el->candidate] : 0) + 1;
                 array_push($jumlahVoters, [
@@ -190,8 +191,10 @@ class VoteCRUD extends Controller
                     'pilih' => $el->candidate,
                 ]);
             }
+            ($el->email==$user->email)?$voterCanVote=$el->candidate:$voterCanVote=null;
             $item["jumlahkandidat"]=$jumlahkandidat;
             $item["jumlahVoters"]=$jumlahVoters;
+            $item["voterCanVote"]=$voterCanVote;
             Log::channel('stderr')->info($lookup);
         }
         Log::channel('stderr')->info($items);
