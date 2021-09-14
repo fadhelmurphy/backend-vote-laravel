@@ -38,7 +38,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/generate/private', [LinkManager::class, 'create']);
     Route::get('/getlink/{id}', [LinkManager::class, 'show']);
     Route::get('/deletelink/{id}', [LinkManager::class, 'destroy']);
-    Route::post('/updatelink', [LinkManager::class, 'update']);
+    Route::post('/updatelink', [LinkManager::class, 'edit']);
     Route::post('/bulkdeletelinks', [LinkManager::class, 'bulkDestroy']);
     Route::get('/links', [LinkManager::class, 'index']);
 });

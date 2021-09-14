@@ -88,7 +88,6 @@ class LinkManager extends Controller
     {
         $vote = VoteLink::select("id", "id_url", "id_vote", "votename")->where("id_url", $id)->get();
 
-        Log::channel('stderr')->info($vote);
         return response()->json([
             'vote' => $vote
         ]);
@@ -106,10 +105,10 @@ class LinkManager extends Controller
         $req = $data['Vote'];
         $user = Auth::user();
         foreach ($req as $element) {
-            $votename = Vote::select("votename")->where("id_vote", $element['id_vote']);
+            $votename = Vote::select("votename")->where("id_vote", $element['id_vote'])->get();
             if ($element['action'] == "tambah") {
                 $vote = new VoteLink();
-                $vote->id_url = $element['id_url'];
+                $vote->id_url = strtolower($element['id_url']);
                 $vote->id_vote = $element['id_vote'];
                 $vote->email = $user->email;
                 $vote->votename = $votename[0]['votename'];
@@ -117,7 +116,7 @@ class LinkManager extends Controller
             } elseif ($element['action'] == "ubah") {
                 $vote = VoteLink::where("id", $element['id'])->update([
                     'votename' => $votename[0]['votename'],
-                    'id_url' => $element['id_url'],
+                    'id_url' => strtolower($element['id_url']),
                     'id_vote' => $element['id_vote'],
                 ]);
             } else {
@@ -138,33 +137,6 @@ class LinkManager extends Controller
      */
     public function update(Request $request)
     {
-        $req = $request->all();
-        $req = $req['Vote'];
-        $user = Auth::user();
-        foreach ($req as $element) {
-            $votename = Vote::select("votename")->where("id_vote", $element['id_vote'])->get();
-        }
-        if ($element['action'] == "tambah") {
-            $vote = new VoteLink;
-            $vote->id_url = $element['id_url'];
-            $vote->id_vote = $element['id_vote'];
-            $vote->email = $user->email;
-            $vote->votename = $votename[0]['votename'];
-            $vote->save();
-        } elseif ($element['action'] == "ubah") {
-            VoteLink::where("id", $element['id'])->update(
-                [
-                    'votename' => $votename[0]['votename'],
-                    'id_url' => $element['id_url'],
-                    'id_vote' => $element['id_vote'],
-                ]
-            );
-        } else {
-            $vote = VoteLink::find($element['id']);
-            if ($vote->email == $user->email) {
-                $vote->delete();
-            }
-        }
     }
 
     /**

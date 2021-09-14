@@ -41,19 +41,29 @@ class Register extends Controller
         }
 
         $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $success['token'] =  $user->createToken('MyApp')->plainTextToken;
-        $success['name'] =  $user->name;
 
-        $response = [
-            'success' => true,
-            'data'    => $success,
-            'message' => 'User register successfully.',
-        ];
+        if(!Auth::attempt($input)){
+
+            $input['password'] = bcrypt($input['password']);
+            $user = User::create($input);
+            $token =  $user->createToken('MyApp')->plainTextToken;
+
+            $response = [
+                'success' => true,
+                'token'    => $token,
+                'message' => 'User register successfully.',
+            ];
 
 
-        return response()->json($response, 200);
+            return response()->json($response, 200);
+        }else{
+
+            $response = [
+                'success' => false,
+                'message' => 'Anda sudah melakukan registrasi',
+            ];
+            return response()->json($response, 404);
+        }
     }
 
     /**

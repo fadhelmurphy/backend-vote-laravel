@@ -27,36 +27,37 @@ class VoteCRUD extends Controller
         $user = Auth::user();
         $items = Vote::all();
         $result = array();
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $name = $item->votename;
             $vote = $item->id_vote;
+            $jumlahOpsi = Vote::select("kandidat")->where("id_vote", $vote)->get();
             $creator = $item->creator;
-            if( !array_key_exists($name,$lookup) && !array_key_exists($vote,$lookup) && $creator == $user->email){
+            if (!array_key_exists($name, $lookup) && !array_key_exists($vote, $lookup) && $creator == $user->email) {
                 $lookup[$name] = 1;
                 $lookup[$vote] = 1;
-                $VoteResults = UserVote::select("candidate","email")->where("id_vote", $vote)->get();
+                $VoteResults = UserVote::select("candidate", "email")->where("id_vote", $vote)->get();
                 // Log::channel('stderr')->info($VoteResults);
                 $jumlahVoters = [];
                 $jumlahkandidat = [];
-                foreach($VoteResults as $el){
-                    $jumlahkandidat[$el->candidate] = (isset($jumlahkandidat[$el->candidate])?$jumlahkandidat[$el->candidate]:0) + 1;
-                    array_push($jumlahVoters,[
+                foreach ($VoteResults as $el) {
+                    $jumlahkandidat[$el->candidate] = (isset($jumlahkandidat[$el->candidate]) ? $jumlahkandidat[$el->candidate] : 0) + 1;
+                    array_push($jumlahVoters, [
                         'email' => $el->email,
                         'pilih' => $el->candidate,
                     ]);
                 }
 
-                array_push($result,[
-                    "id_vote"=>$vote,
-                    "name"=>$name,
-                    "jumlahkandidat"=>$jumlahkandidat,
-                    "jumlahVoters"=>$jumlahVoters,
+                array_push($result, [
+                    "id_vote" => $vote,
+                    "name" => $name,
+                    "jumlahkandidat" => $jumlahkandidat,
+                    "jumlahVoters" => $jumlahVoters,
+                    "jumlahOpsi"=>count($jumlahOpsi)
                 ]);
-
             }
         }
         return response()->json([
-            "votes"=>$result
+            "votes" => $result
         ], 200);
         // Log::channel('stderr')->info($items);
     }
@@ -71,20 +72,20 @@ class VoteCRUD extends Controller
         $req = $request->all();
         // Log::channel('stderr')->info($req);
 
-        $validatedData = Validator::make($req,
-        [
-            'kandidatImage' => 'required|png,jpg|max:2048',
-           ]
-    );
-    // $files = [];
-        if($request->hasfile('kandidatImage')) {
+        $validatedData = Validator::make(
+            $req,
+            [
+                'kandidatImage' => 'required|png,jpg|max:2048',
+            ]
+        );
+        // $files = [];
+        if ($request->hasfile('kandidatImage')) {
             // $path = Storage::putFile('kandidatImage', $request->file('public'));
-            foreach($request->file('kandidatImage') as $file)
-            {
+            foreach ($request->file('kandidatImage') as $file) {
                 // $name = time().rand(1,100).'.'.$file->extension();
                 $filena = $file->getClientOriginalName();
                 // $fileName = pathinfo($file1,PATHINFO_FILENAME);
-                Storage::putFileAs('public', $file ,$filena);
+                Storage::putFileAs('public', $file, $filena);
                 // $file->move(public_path('public'), $file1);
                 // $files[] = $file1;
             }
@@ -95,15 +96,15 @@ class VoteCRUD extends Controller
         $user = Auth::user();
         $id = Str::random(6);
         $results = Vote::find($id);
-        if ($results == null){
-            foreach($req['fileName'] as $index=>$element){
+        if ($results == null) {
+            foreach ($req['fileName'] as $index => $element) {
                 $vote = new Vote();
                 $vote->id_vote = $id;
-            $vote->creator = $user->email;
-            $vote->votename = $req['votename'];
-            $vote->kandidat = $req['kandidat'][$index];
-            $vote->kandidatImage = $element;
-            $vote->save();
+                $vote->creator = $user->email;
+                $vote->votename = $req['votename'];
+                $vote->kandidat = $req['kandidat'][$index];
+                $vote->kandidatImage = $element;
+                $vote->save();
             }
         }
     }
@@ -116,21 +117,21 @@ class VoteCRUD extends Controller
      */
     public function store(Request $request)
     {
-       $req = $request->all();
-       $id_vote = $req['id_vote'];
-       $kandidat = $req['kandidat'];
-       $user = Auth::user();
-       $check = UserVote::select("email")->where("id_vote",$id_vote)->where("email",$user->email)->get();
-       if (count($check) == 0) {
-           $UV = new UserVote();
-           $UV->email = $user->email;
-           $UV->id_vote = $id_vote;
-           $UV->candidate = $kandidat;
-           $UV->save();
-           return response()->json("berhasil");
-       }else {
-        return response()->json("gagal");
-       }
+        $req = $request->all();
+        $id_vote = $req['id_vote'];
+        $kandidat = $req['kandidat'];
+        $user = Auth::user();
+        $check = UserVote::select("email")->where("id_vote", $id_vote)->where("email", $user->email)->get();
+        if (count($check) == 0) {
+            $UV = new UserVote();
+            $UV->email = $user->email;
+            $UV->id_vote = $id_vote;
+            $UV->candidate = $kandidat;
+            $UV->save();
+            return response()->json("berhasil");
+        } else {
+            return response()->json("gagal");
+        }
     }
 
     /**
@@ -143,10 +144,25 @@ class VoteCRUD extends Controller
     {
 
         // Log::channel('stderr')->info($id);
-        $vote = Vote::select("id","id_vote","votename","kandidat",'kandidatImage')->where("id_vote", $id)->get();
+        $items = Vote::select("id", "id_vote", "votename", "kandidat", 'kandidatImage')->where("id_vote", $id)->get();
 
+        $VoteResults = UserVote::select("candidate", "email")->where("id_vote", $items[0]->id_vote)->get();
+        // Log::channel('stderr')->info($VoteResults);
+        $jumlahVoters = [];
+        $jumlahkandidat = [];
+        foreach ($VoteResults as $el) {
+            $jumlahkandidat[$el->candidate] = (isset($jumlahkandidat[$el->candidate]) ? $jumlahkandidat[$el->candidate] : 0) + 1;
+            array_push($jumlahVoters, [
+                'email' => $el->email,
+                'pilih' => $el->candidate,
+            ]);
+        }
         return response()->json([
-            "vote"=>$vote
+            "vote" => $items,
+            "result" => [
+                "jumlahkandidat" => $jumlahkandidat,
+                "jumlahVoters" => $jumlahVoters,
+            ]
         ]);
     }
 
@@ -154,10 +170,32 @@ class VoteCRUD extends Controller
     {
         $req = $request->only(['code']);
         $id = $req['code'];
-        // Log::channel('stderr')->info($id);
-        $vote = VoteLink::select("id","id_vote","votename")->where("id_url", $id)->get();
 
-        return response()->json($vote);
+        $lookup = array();
+        $user = Auth::user();
+        $items = VoteLink::select("id", "id_vote", "votename")->where("id_url", $id)->get();
+        foreach ($items as $item) {
+            $vote = $item->id_vote;
+            $jumlahOpsi = Vote::select("kandidat")->where("id_vote", $vote)->get();
+            $item->jumlahOpsi=count($jumlahOpsi);
+
+            $VoteResults = UserVote::select("candidate", "email")->where("id_vote", $vote)->get();
+            // Log::channel('stderr')->info($VoteResults);
+            $jumlahVoters = [];
+            $jumlahkandidat = [];
+            foreach ($VoteResults as $el) {
+                $jumlahkandidat[$el->candidate] = (isset($jumlahkandidat[$el->candidate]) ? $jumlahkandidat[$el->candidate] : 0) + 1;
+                array_push($jumlahVoters, [
+                    'email' => $el->email,
+                    'pilih' => $el->candidate,
+                ]);
+            }
+            $item["jumlahkandidat"]=$jumlahkandidat;
+            $item["jumlahVoters"]=$jumlahVoters;
+            Log::channel('stderr')->info($lookup);
+        }
+        Log::channel('stderr')->info($items);
+        return response()->json($items);
     }
 
     /**
@@ -168,21 +206,20 @@ class VoteCRUD extends Controller
      */
     public function update(Request $request)
     {
-        if($request->hasfile('kandidatImage')) {
+        if ($request->hasfile('kandidatImage')) {
             // $path = Storage::putFile('kandidatImage', $request->file('public'));
-            foreach($request->file('kandidatImage') as $file)
-            {
-                $filena = explode(".",$file->getClientOriginalName());
+            foreach ($request->file('kandidatImage') as $file) {
+                $filena = explode(".", $file->getClientOriginalName());
                 // Log::channel('stderr')->info($filena[0]);
-                $filena = Vote::select("kandidatImage")->where("kandidatImage", 'LIKE', "%".$filena[0]."%")->get();
+                $filena = Vote::select("kandidatImage")->where("kandidatImage", 'LIKE', "%" . $filena[0] . "%")->get();
                 // Log::channel('stderr')->info($filena);
-                if(count($filena)>0){
+                if (count($filena) > 0) {
                     $exists = Storage::disk('public')->exists($filena[0]["kandidatImage"]);
-                    if($exists){
+                    if ($exists) {
                         Storage::disk('public')->delete($filena[0]["kandidatImage"]);
                     }
                 }
-                    Storage::putFileAs('public', $file ,$file->getClientOriginalName());
+                Storage::putFileAs('public', $file, $file->getClientOriginalName());
                 // if (count($filena)>0) {
                 //     $exists = Storage::disk('public')->exists($filena[0]["kandidatImage"]);
                 //     if($exists){
@@ -194,8 +231,8 @@ class VoteCRUD extends Controller
                 // // $file->move(public_path('public'), $file1);
                 // }
                 // $files[] = $file1;
+            }
         }
-    }
         $req = $request->all();
         // $req = $req['Vote'];
         // $array = (array) $req;
@@ -204,39 +241,34 @@ class VoteCRUD extends Controller
         $user = Auth::user();
         foreach ($req['action'] as $key => $element) {
             if ($element == "tambah") {
-            $vote = new Vote();
-            $vote->id_vote = $req['id_vote'][$key];
-            $vote->creator = $user->email;
-            $vote->votename = $req['votename'][$key];
-            $vote->kandidat = $req['kandidat'][$key];
-            $vote->kandidatImage = $req['fileName'][$key];
-            $vote->save();
-            }elseif ($element == "ubah") {
-                $filena = Vote::select("kandidatImage")->where("id", $req['id'][$key])->get();
-                $exists = Storage::disk('public')->exists($filena[0]["kandidatImage"]);
-                if($exists){
-                    Storage::disk('public')->delete($filena[0]["kandidatImage"]);
-                }
+                $vote = new Vote();
+                $vote->id_vote = $req['id_vote'][$key];
+                $vote->creator = $user->email;
+                $vote->votename = $req['votename'][$key];
+                $vote->kandidat = $req['kandidat'][$key];
+                $vote->kandidatImage = $req['fileName'][$key];
+                $vote->save();
+            } elseif ($element == "ubah") {
                 $vote = Vote::where("id", $req['id'][$key])->update([
-                    'votename'=>$req['votename'][$key],
-                    'kandidat'=>$req['kandidat'][$key],
-                    'kandidatImage'=>$req['fileName'][$key],
+                    'votename' => $req['votename'][$key],
+                    'kandidat' => $req['kandidat'][$key],
+                    'kandidatImage' => $req['fileName'][$key],
                 ]);
-            }else {
+            } else {
 
                 $filena = Vote::select("kandidatImage")->where("id", $req['id'][$key])->get();
                 $exists = Storage::disk('public')->exists($filena[0]["kandidatImage"]);
-                if($exists){
+                if ($exists) {
                     Storage::disk('public')->delete($filena[0]["kandidatImage"]);
                 }
                 $vote = Vote::find($req['id'][$key]);
                 if ($vote->creator == $user->email) {
-                   $vote->delete();
+                    $vote->delete();
                 }
                 UserVote::where("id_vote", $req['id_vote'][$key])->where("candidate", $req['kandidat'][$key])->delete();
             }
         }
-}
+    }
 
     /**
      * Update the specified resource in storage.
@@ -258,6 +290,15 @@ class VoteCRUD extends Controller
      */
     public function destroy($id)
     {
+
+        $filena = Vote::select("kandidatImage")->where("id_vote", $id)->get();
+        foreach ($filena as $file) {
+
+            $exists = Storage::disk('public')->exists($file["kandidatImage"]);
+            if ($exists) {
+                Storage::disk('public')->delete($file["kandidatImage"]);
+            }
+        }
         $user = Auth::user();
         Vote::where("id_vote", $id)->where("creator", $user->email)->delete();
     }
@@ -268,15 +309,22 @@ class VoteCRUD extends Controller
         $data = $request->all();
 
         foreach ($data as $key => $value) {
-            VoteLink::where("id_vote", $data[$key]['id_vote'])->where("email", $user->email)->delete();
-            Vote::where("id_vote", $data[$key]['id_vote'])->where("creator", $user->email)->delete();
-        }
 
+            $filena = Vote::select("kandidatImage")->where("id_vote", $value['id_vote'])->get();
+            foreach ($filena as $file) {
+
+                $exists = Storage::disk('public')->exists($file["kandidatImage"]);
+                if ($exists) {
+                    Storage::disk('public')->delete($file["kandidatImage"]);
+                }
+            }
+            VoteLink::where("id_vote", $value['id_vote'])->where("email", $user->email)->delete();
+            Vote::where("id_vote", $value['id_vote'])->where("creator", $user->email)->delete();
+        }
     }
     public function destroyVoter(Request $request)
     {
-        ['email'=>$email , 'id_vote'=>$id_vote] = $request->all();
-        UserVote::where('id_vote',$id_vote)->
-        where('email',$email)->delete();
+        ['email' => $email, 'id_vote' => $id_vote] = $request->all();
+        UserVote::where('id_vote', $id_vote)->where('email', $email)->delete();
     }
 }
