@@ -191,7 +191,12 @@ class VoteCRUD extends Controller
                     'pilih' => $el->candidate,
                 ]);
             }
-            ($el->email==$user->email)?$voterCanVote=$el->candidate:$voterCanVote=null;
+            foreach ($VoteResults as $el) {
+           if ($el->email==$user->email){
+               $voterCanVote=$el->candidate;
+                break;
+        }else $voterCanVote=null;
+            }
             $item["jumlahkandidat"]=$jumlahkandidat;
             $item["jumlahVoters"]=$jumlahVoters;
             $item["voterCanVote"]=$voterCanVote;

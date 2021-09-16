@@ -112,6 +112,7 @@ class LinkManager extends Controller
                 $vote->id_vote = $element['id_vote'];
                 $vote->email = $user->email;
                 $vote->votename = $votename[0]['votename'];
+                $vote->status = "private";
                 $vote->save();
             } elseif ($element['action'] == "ubah") {
                 $vote = VoteLink::where("id", $element['id'])->update([
@@ -120,7 +121,7 @@ class LinkManager extends Controller
                     'id_vote' => $element['id_vote'],
                 ]);
             } else {
-                $vote = Vote::find($element['id']);
+                $vote = VoteLink::find($element['id']);
                 if ($vote->email == $user->email) {
                     $vote->delete();
                 }
