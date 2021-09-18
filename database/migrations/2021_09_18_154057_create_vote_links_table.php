@@ -14,13 +14,15 @@ class CreateVoteLinksTable extends Migration
     public function up()
     {
         Schema::create('vote_links', function (Blueprint $table) {
+            // fields
             $table->id();
-            $table->string('id_url', 6);
-            $table->string('email', 60);
-            $table->string('id_vote', 6);
-            $table->string('votename', 30);
-            $table->string('status', 7);
+            $table->bigInteger('id_vote')->unsigned();
+            $table->bigInteger('id_link')->unsigned();
             $table->timestamps();
+
+            // id and relations
+            $table->foreign('id_vote')->references('id')->on('votes');
+            $table->foreign('id_link')->references('id')->on('links');
         });
     }
 

@@ -10,8 +10,13 @@ use App\Models\VoteLink;
 use Illuminate\Support\Facades\Log;
 use App\Models\Vote;
 
-class LinkManager extends Controller
+class LinkController extends Controller
 {
+    public function __construct($id)
+    {
+        $this->id_link = $id;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,6 +24,7 @@ class LinkManager extends Controller
      */
     public function index()
     {
+        $votes =
         $user = Auth::user();
         $lookup = array();
         $result = array();

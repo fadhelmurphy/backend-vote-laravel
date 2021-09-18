@@ -4,48 +4,21 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 
-class Login extends Controller
+class RegisterController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function check(Request $request)
+    public function index()
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-            $user = Auth::user();
-            $token = $user->createToken('MyApp')->plainTextToken;
-            // $success['token'] =  $token;
-            // $success['name'] =  $user->name;
-
-            $response = [
-                'success' => true,
-                'token'    => $token,
-                'message' => 'User login successfully.',
-            ];
-
-
-            return response()->json($response, 200);
-        }
-        else{
-            $response = [
-                'success' => false,
-                'message' => 'Unauthorised.',
-            ];
-
-
-            if(!empty($errorMessages)){
-                $response['data'] =['error'=>'Unauthorised'];
-            }
-
-
-            return response()->json($response, 404);
-        }
+        //
     }
 
     /**
@@ -53,9 +26,44 @@ class Login extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required',
+            // 'c_password' => 'required|same:password',
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+
+        $input = $request->all();
+
+        if(!Auth::attempt($input)){
+
+            $input['password'] = bcrypt($input['password']);
+            $user = User::create($input);
+            $token =  $user->createToken('MyApp')->plainTextToken;
+
+            $response = [
+                'success' => true,
+                'token'    => $token,
+                'message' => 'User register successfully.',
+            ];
+
+
+            return response()->json($response, 200);
+        }else{
+
+            $response = [
+                'success' => false,
+                'message' => 'Anda sudah melakukan registrasi',
+            ];
+            return response()->json($response, 404);
+        }
     }
 
     /**
@@ -75,15 +83,9 @@ class Login extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show($id)
     {
-        $user = Auth::user();
-
-        $response = [
-            'name' => $user->name,
-            'email' => $user->email
-        ];
-        return response()->json($response);
+        //
     }
 
     /**
@@ -115,15 +117,8 @@ class Login extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy (Request $request) {
-        $user = $request->user();
-        $user->currentAccessToken()->delete();
-        $respon = [
-            'status' => 'success',
-            'msg' => 'Logout successfully',
-            'errors' => null,
-            'content' => null,
-        ];
-        return response()->json($respon, 200);
+    public function destroy($id)
+    {
+        //
     }
 }

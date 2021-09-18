@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\Login;
-use App\Http\Controllers\Auth\Register;
-use App\Http\Controllers\Dashboard\VoteCRUD;
-use App\Http\Controllers\Dashboard\LinkManager;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Dashboard\VoteController;
+use App\Http\Controllers\Dashboard\UserVoteController;
+use App\Http\Controllers\Dashboard\LinkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,32 +17,37 @@ use App\Http\Controllers\Dashboard\LinkManager;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('register', [Register::class, 'create']);
-Route::post('login', [Login::class, 'check']);
+Route::post('register', [RegisterController::class, 'create']);
+Route::post('login', [LoginController::class, 'check']);
 
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('/getuser', [Login::class, 'show']);
-    Route::post('/logout', [Login::class, 'destroy']);
+    Route::get('/me', [LoginController::class, 'show']);
+    Route::post('/logout', [LoginController::class, 'destroy']);
 
-    Route::post('add', [VoteCRUD::class, 'create']);
-    Route::get('/AllVote', [VoteCRUD::class, 'show']);
-    Route::get('/get/{id}', [VoteCRUD::class, 'index']);
-    Route::post('/show/priv8', [VoteCRUD::class, 'indexUrl']);
-    Route::post('/update', [VoteCRUD::class, 'update']);
-    Route::get('/delete/{id}', [VoteCRUD::class, 'destroy']);
-    Route::post('/bulkdelete', [VoteCRUD::class, 'bulkDestroy']);
-    Route::post('/sendvote', [VoteCRUD::class, 'store']);
-    Route::post('/deletevoter', [VoteCRUD::class, 'destroyVoter']);
+    Route::prefix('votes')->group(function () {
 
-    Route::post('/generate/private', [LinkManager::class, 'create']);
-    Route::get('/getlink/{id}', [LinkManager::class, 'show']);
-    Route::get('/deletelink/{id}', [LinkManager::class, 'destroy']);
-    Route::post('/updatelink', [LinkManager::class, 'edit']);
-    Route::post('/bulkdeletelinks', [LinkManager::class, 'bulkDestroy']);
-    Route::get('/links', [LinkManager::class, 'index']);
+        Route::get('/', [VoteController::class, 'index']);
+        Route::post('/', [VoteController::class, 'store']);
+        Route::post('/delete', [VoteController::class, 'bulkDestroy']);
+
+        Route::get('/{id}', [VoteController::class, 'show']);
+        Route::post('/{id}/update', [VoteController::class, 'edit']);
+        Route::post('/{id}/delete', [VoteController::class, 'destroy']);
+
+    });
+
+    // Route::prefix('{id}')->group(function () {
+    //     Route::post('/index/priv8', [VoteController::class, 'showUrl']);
+    //     Route::post('/sendvote', [UserVoteController::class, 'store']);
+    //     Route::post('/deletevoter', [UserVoteController::class, 'destroy']);
+    // });
+
+
+    // Route::post('/generate/private', [LinkController::class, 'create']);
+    // Route::get('/getlink/{id}', [LinkController::class, 'index']);
+    // Route::get('/deletelink/{id}', [LinkController::class, 'destroy']);
+    // Route::post('/updatelink', [LinkController::class, 'edit']);
+    // Route::post('/bulkdeletelinks', [LinkController::class, 'bulkDestroy']);
+    // Route::get('/links', [LinkController::class, 'show']);
 });
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });

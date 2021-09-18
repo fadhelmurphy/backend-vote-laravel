@@ -14,11 +14,18 @@ class CreateUserVotesTable extends Migration
     public function up()
     {
         Schema::create('user_votes', function (Blueprint $table) {
+            // fields
             $table->id();
-            $table->string('email', 60);
-            $table->string('candidate', 30);
-            $table->string('id_vote', 6);
+            $table->bigInteger('id_user')->unsigned();
+            $table->bigInteger('id_vote')->unsigned();
+            $table->bigInteger('id_candidate')->unsigned();
             $table->timestamps();
+
+            // id and relations
+            $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_vote')->references('id')->on('votes');
+            $table->foreign('id_candidate')->references('id')->on('vote_candidates');
+            $table->unique(['id_user', 'id_vote']);
         });
     }
 
