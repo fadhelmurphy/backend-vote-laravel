@@ -29,7 +29,6 @@ class UserVoteController extends Controller
         }
 
         return $this->error404();
-
     }
 
     /**
@@ -43,38 +42,36 @@ class UserVoteController extends Controller
         $data = $request->all();
         $id_candidate = $data['id'];
         $id_user = Auth::user()->id;
+        $order = max($order - 1, 0);
         $link = Link::with([
-                'votes',
-                'votes.candidates' => function($query) use ($id_candidate) {
-                    $query->where('id', $id_candidate);
-                }])
+                    'votes',
+                    'votes.candidates' => function ($query) use ($id_candidate) {
+                        $query->where('id', $id_candidate);
+                    }
+                ])
             ->where('key', $key)
             ->take(1)
             ->get()
             ->all()[0] ?? false;
-
         if ($link) {
-            $vote = $link['votes'][max($order - 1, 0)] ?? false;
-            if ($vote) {
-                $candidate = $vote['candidates'][0] ?? false;
-                if ($candidate) {
-                    $exist = UserVote::where('id_candidate', $id_candidate)
-                        ->where('id_user', $id_user)
-                        ->first();
-                    if (!$exist) {
-                        $userVote = new UserVote();
-                        $userVote->id_vote = $vote['id_vote'];
-                        $userVote->id_candidate = $id_candidate;
-                        $userVote->id_user = $id_user;
-                        $userVote->save();
-                        return response()->json([
-                            'message' => 'Thank you! Your vote have been saved successfully'
-                        ]);
-                    }
+            $vote = $link['votes'][$order] ?? false;
+            if ($vote && count($vote['candidates'])) {
+                $exist = UserVote::where('id_candidate', $id_candidate)
+                    ->where('id_user', $id_user)
+                    ->first();
+                if (!$exist) {
+                    $userVote = new UserVote();
+                    $userVote->id_vote = $vote['id_vote'];
+                    $userVote->id_candidate = $id_candidate;
+                    $userVote->id_user = $id_user;
+                    $userVote->save();
                     return response()->json([
-                        'message' => 'Sorry, your vote have been used'
-                    ], 400);
+                        'message' => 'Thank you! Your vote have been saved successfully'
+                    ]);
                 }
+                return response()->json([
+                    'message' => 'Sorry, your vote have been used'
+                ], 400);
             }
         }
 
@@ -91,11 +88,11 @@ class UserVoteController extends Controller
     {
         $data = $request->all();
         $userVote = UserVote::select([
-                'user_votes.id',
-                'users.name as user',
-                'votes.title as vote',
-                'vote_candidates.name as candidate'
-            ])
+            'user_votes.id',
+            'users.name as user',
+            'votes.title as vote',
+            'vote_candidates.name as candidate'
+        ])
             ->where('user_votes.id_user', $data['id_user'])
             ->where('user_votes.id_vote', $id)
             ->where('user_votes.id_candidate', $data['id_candidate'])
@@ -118,5 +115,4 @@ class UserVoteController extends Controller
 
         return $this->error404();
     }
-
 }

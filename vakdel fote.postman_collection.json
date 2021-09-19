@@ -784,13 +784,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/api/szwKTZ",
+					"raw": "{{base_url}}/api/ZEejU2",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
-						"szwKTZ"
+						"ZEejU2"
 					]
 				}
 			},
@@ -816,19 +816,19 @@
 					"formdata": [
 						{
 							"key": "id",
-							"value": "1",
+							"value": "2",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{base_url}}/api/NgWK4B/1",
+					"raw": "{{base_url}}/api/ZEejU2/1",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
-						"NgWK4B",
+						"ZEejU2",
 						"1"
 					]
 				}
@@ -855,7 +855,7 @@
 					"formdata": [
 						{
 							"key": "id_candidate",
-							"value": "1",
+							"value": "2",
 							"type": "text"
 						},
 						{

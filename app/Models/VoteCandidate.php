@@ -9,12 +9,6 @@ class VoteCandidate extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'id_vote',
-        'name',
-        'image',
-    ];
-
     public function voters() {
         return $this->hasMany(UserVote::class, 'id_candidate', 'id')
             ->select(

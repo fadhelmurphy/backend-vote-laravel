@@ -124,21 +124,24 @@ class VoteController extends Controller
                 $vote->save();
 
                 foreach ($data['is_delete'] ?? [] as $index => $is_delete) {
+                    $candidate = new VoteCandidate();
                     $id_candidate = $data['id'][$index] ?? false;
-                    if ($is_delete && $id_candidate) {
-                        VoteCandidate::destroy($id_candidate);
-                    } else {
-                        $candidate = $id_candidate
-                            ? VoteCandidate::find($id_candidate)
-                            : new VoteCandidate();
-                        $candidate->name = $data['name'][$index];
-                        $candidate->id_vote = $id;
-
-                        if (($data['image'] ?? [])[$index] ?? false)
-                            $candidate->image = SharedUtils::saveImage($data['image'][$index]);
-
-                        $candidate->save();
+                    if ($id_candidate) {
+                        $candidate =  VoteCandidate::find($id_candidate);
+                        SharedUtils::deleteImage($candidate->image);
+                        if ($is_delete) {
+                            $candidate->delete();
+                            continue;
+                        }
                     }
+                    $candidate->name = $data['name'][$index];
+                    $candidate->id_vote = $id;
+
+                    if (($data['image'] ?? [])[$index] ?? false) {
+                        $candidate->image = SharedUtils::saveImage($data['image'][$index]);
+                    }
+
+                    $candidate->save();
                 }
 
                 return response()->json([
