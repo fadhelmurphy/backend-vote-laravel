@@ -1,0 +1,914 @@
+{
+	"info": {
+		"_postman_id": "4aa96ad0-c455-488b-8077-f40daa36c9c4",
+		"name": "vakdel fote",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/api/register",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "1|hAElLF34F7Qc8K3okosGh4U9ycxJHn6OGPa1E2Dr",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Vakdel",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "vakdel@email.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "vakdel",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/register",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/register(2)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "1|hAElLF34F7Qc8K3okosGh4U9ycxJHn6OGPa1E2Dr",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Fakdel",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "fakdel@email.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "fakdel",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/register",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/login",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "1|hAElLF34F7Qc8K3okosGh4U9ycxJHn6OGPa1E2Dr",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "vakdel@email.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "vakdel",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/login(2)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "1|hAElLF34F7Qc8K3okosGh4U9ycxJHn6OGPa1E2Dr",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "fakdel@email.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "fakdel",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/me",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{base_url}}/api/me/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"me",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/votes/",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{base_url}}/api/votes/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"votes",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/votes/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Makan di mana?",
+							"type": "text"
+						},
+						{
+							"key": "name[0]",
+							"value": "Option 1",
+							"type": "text"
+						},
+						{
+							"key": "image[0]",
+							"type": "file",
+							"src": "/home/mujadid/Pictures/wavegrey.png"
+						},
+						{
+							"key": "name[1]",
+							"value": "Option 2",
+							"type": "text"
+						},
+						{
+							"key": "image[1]",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/votes/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"votes",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/votes/delete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id[]",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "id[]",
+							"value": "3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/votes/delete",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"votes",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/votes/{id}",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{base_url}}/api/votes/1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"votes",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/votes/{id}/update",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Minum Apa",
+							"type": "text"
+						},
+						{
+							"key": "id[0]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "is_delete[0]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "id[1]",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "is_delete[1]",
+							"value": "0",
+							"type": "text"
+						},
+						{
+							"key": "name[1]",
+							"value": "Option 1",
+							"type": "text"
+						},
+						{
+							"key": "image[1]",
+							"type": "file",
+							"src": "/home/mujadid/Pictures/wavegrey.png"
+						},
+						{
+							"key": "is_delete[2]",
+							"value": "0",
+							"type": "text"
+						},
+						{
+							"key": "name[2]",
+							"value": "Option 2",
+							"type": "text"
+						},
+						{
+							"key": "image[2]",
+							"type": "file",
+							"src": "/home/mujadid/Documents/logo-gundar.png"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/votes/1/update",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"votes",
+						"1",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/votes/{id}/delete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{base_url}}/api/votes/1/delete",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"votes",
+						"1",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/links/",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{base_url}}/api/links",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"links"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/links/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "description",
+							"value": "Akhirnya jalan-jalan",
+							"type": "text"
+						},
+						{
+							"key": "id[0]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "id[1]",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/links/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"links",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/links/delete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id[0]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "id[1]",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/links/delete",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"links",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/links/{id}",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{base_url}}/api/links/1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"links",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/links/{id}update",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "description",
+							"value": "Akhirnya jalan-jalan",
+							"type": "text"
+						},
+						{
+							"key": "id[0]",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/links/1/update",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"links",
+						"1",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/links/{id}/delete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/links/1/delete",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"links",
+						"1",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/{key}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/szwKTZ",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"szwKTZ"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/{key}/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/NgWK4B/1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"NgWK4B",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/votes/1/delete_user_votes",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id_candidate",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "id_user",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/votes/1/delete_user_votes",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"votes",
+						"1",
+						"delete_user_votes"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "1|6TjXzwOSo2EOGLfhzxvQXNz1DF6mBZZfAlIdJNga"
+		},
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000"
+		}
+	]
+}

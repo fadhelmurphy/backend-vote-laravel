@@ -15,12 +15,12 @@ class CreateVoteLinksTable extends Migration
     {
         Schema::create('vote_links', function (Blueprint $table) {
             // fields
-            $table->id();
             $table->bigInteger('id_vote')->unsigned();
             $table->bigInteger('id_link')->unsigned();
             $table->timestamps();
 
             // id and relations
+            $table->unique('id_vote', 'id_link');
             $table->foreign('id_vote')->references('id')->on('votes');
             $table->foreign('id_link')->references('id')->on('links');
         });

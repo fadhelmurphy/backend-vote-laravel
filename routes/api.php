@@ -34,20 +34,25 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/{id}', [VoteController::class, 'show']);
         Route::post('/{id}/update', [VoteController::class, 'edit']);
         Route::post('/{id}/delete', [VoteController::class, 'destroy']);
+        Route::post('/{id}/delete_user_votes', [UserVoteController::class, 'destroy']);
 
     });
 
-    // Route::prefix('{id}')->group(function () {
-    //     Route::post('/index/priv8', [VoteController::class, 'showUrl']);
-    //     Route::post('/sendvote', [UserVoteController::class, 'store']);
-    //     Route::post('/deletevoter', [UserVoteController::class, 'destroy']);
-    // });
+    Route::prefix('links')->group(function () {
 
+        Route::get('/', [LinkController::class, 'index']);
+        Route::post('/', [LinkController::class, 'store']);
+        Route::post('/delete', [LinkController::class, 'bulkDestroy']);
 
-    // Route::post('/generate/private', [LinkController::class, 'create']);
-    // Route::get('/getlink/{id}', [LinkController::class, 'index']);
-    // Route::get('/deletelink/{id}', [LinkController::class, 'destroy']);
-    // Route::post('/updatelink', [LinkController::class, 'edit']);
-    // Route::post('/bulkdeletelinks', [LinkController::class, 'bulkDestroy']);
-    // Route::get('/links', [LinkController::class, 'show']);
+        Route::get('/{id}', [LinkController::class, 'show']);
+        Route::post('/{id}/update', [LinkController::class, 'edit']);
+        Route::post('/{id}/delete', [LinkController::class, 'destroy']);
+
+    });
+
+    Route::prefix('{key}')->group(function () {
+        Route::get('/', [UserVoteController::class, 'show']);
+        Route::post('/{order}', [UserVoteController::class, 'store']);
+    });
 });
+

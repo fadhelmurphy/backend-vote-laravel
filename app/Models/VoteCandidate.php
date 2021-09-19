@@ -16,6 +16,11 @@ class VoteCandidate extends Model
     ];
 
     public function voters() {
-        return $this->hasMany(UserVote::class, 'id_candidate', 'id');
+        return $this->hasMany(UserVote::class, 'id_candidate', 'id')
+            ->select(
+                'user_votes.id_candidate',
+                'users.id','name', 'email',
+                'user_votes.created_at', 'user_votes.updated_at')
+            ->join('users', 'user_votes.id_user', '=', 'users.id');
     }
 }

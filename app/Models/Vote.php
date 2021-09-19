@@ -15,7 +15,8 @@ class Vote extends Model
     ];
 
     public function creator() {
-        return $this->belongsTo(User::class, 'id_user', 'id');
+        return $this->belongsTo(User::class, 'id_user', 'id')
+            ->select('id', 'name', 'email');
     }
 
     public function candidates()
@@ -25,6 +26,7 @@ class Vote extends Model
 
     public function voters()
     {
-        return $this->hasMany(UserVote::class, 'id_vote', 'id');
+        return $this->hasMany(UserVote::class, 'id_vote', 'id')
+            ->select('id', 'name', 'email');
     }
 }

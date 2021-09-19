@@ -19,7 +19,6 @@ class CreateLinksTable extends Migration
             $table->bigInteger('id_user')->unsigned();
             $table->string('description', 32);
             $table->string('key', 6);
-            $table->string('status', 7);
             $table->timestamps();
 
             // id and relations
