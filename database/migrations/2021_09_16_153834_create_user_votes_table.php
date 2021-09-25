@@ -14,6 +14,7 @@ class CreateUserVotesTable extends Migration
     public function up()
     {
         Schema::create('user_votes', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             // fields
             $table->id();
             $table->bigInteger('id_user')->unsigned();
@@ -22,9 +23,9 @@ class CreateUserVotesTable extends Migration
             $table->timestamps();
 
             // id and relations
-            $table->foreign('id_user')->references('id')->on('users');
-            $table->foreign('id_vote')->references('id')->on('votes');
-            $table->foreign('id_candidate')->references('id')->on('vote_candidates');
+            $table->foreign('id_user')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('id_vote')->references('id')->on('votes')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('id_candidate')->references('id')->on('vote_candidates')->onUpdate('cascade')->onDelete('cascade');
             $table->unique(['id_user', 'id_vote']);
         });
     }

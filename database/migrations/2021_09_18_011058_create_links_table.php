@@ -14,16 +14,17 @@ class CreateLinksTable extends Migration
     public function up()
     {
         Schema::create('links', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             // fields
             $table->id();
             $table->bigInteger('id_user')->unsigned();
-            $table->string('description', 32);
+            // $table->string('description', 32);
             $table->string('key', 6);
             $table->timestamps();
 
             // id and relations
             $table->unique('key');
-            $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_user')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

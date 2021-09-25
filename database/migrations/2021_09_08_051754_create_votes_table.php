@@ -14,6 +14,7 @@ class CreateVotesTable extends Migration
     public function up()
     {
         Schema::create('votes', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             // fields
             $table->id();
             $table->string('title', 32);
@@ -21,7 +22,7 @@ class CreateVotesTable extends Migration
             $table->timestamps();
 
             // id and relations
-            $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_user')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

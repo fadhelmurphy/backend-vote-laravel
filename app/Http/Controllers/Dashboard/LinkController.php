@@ -65,14 +65,14 @@ class LinkController extends Controller
     {
         $data = $request->all();
         $validator = Validator::make($data, [
-            'description'   => 'required|string',
+            // 'description'   => 'required|string',
             'id'            => 'required|array|min:1',
             'id.*'          => 'required|numeric'
         ]);
 
         if (!$validator->fails()) {
             $link = new Link();
-            $link->description = $data['description'];
+            // $link->description = $data['description'];
             $link->id_user = Auth::user()->id;
             $link->key = SharedUtils::generateId(6);
             $link->save();
@@ -90,7 +90,9 @@ class LinkController extends Controller
             }
 
             return response()->json([
-                'message' => "$totalAdded votes sucessfully binded to \"$link->description\""
+                'message' => "$totalAdded votes sucessfully binded",
+                'code' => $link->key
+                //  \"$link->description\""
             ]);
         }
 
@@ -106,8 +108,9 @@ class LinkController extends Controller
     public function edit(Request $request, $id)
     {
         $data = $request->all();
+        Log::info('test 1234');
         $validator = Validator::make($data, [
-            'description' => 'string|required',
+            // 'description' => 'string|required',
             'id' => 'required|array|min:1',
             'id.*' => 'required|numeric',
         ]);
@@ -115,7 +118,7 @@ class LinkController extends Controller
         $link = Link::find($id);
         if ($link) {
             if (!$validator->fails()) {
-                $link->description = $data['description'];
+                // $link->description = $data['description'];
                 $link->save();
 
                 VoteLink::where('id_link', $id)->delete();
@@ -130,7 +133,8 @@ class LinkController extends Controller
                 }
 
                 return response()->json([
-                    'message' => "$totalAdded votes sucessfully added to \"$link->description\""
+                    'message' => "$totalAdded votes sucessfully added to "
+                    // \"$link->description\""
                 ]);
             }
             return $this->error404();

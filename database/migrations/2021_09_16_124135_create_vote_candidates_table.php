@@ -14,16 +14,17 @@ class CreateVoteCandidatesTable extends Migration
     public function up()
     {
         Schema::create('vote_candidates', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             // fields
             $table->id();
             $table->bigInteger('id_vote')->unsigned();
             $table->string('name', 32);
-            $table->string('image', 32)->nullable(true);
+            $table->string('image', 72)->nullable(true);
             $table->timestamps();
 
             // id and relations
             $table->unique(['id', 'id_vote']);
-            $table->foreign('id_vote')->references('id')->on('votes');
+            $table->foreign('id_vote')->references('id')->on('votes')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

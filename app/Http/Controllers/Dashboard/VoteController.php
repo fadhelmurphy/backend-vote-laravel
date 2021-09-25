@@ -41,7 +41,7 @@ class VoteController extends Controller
     public function show($id)
     {
         $id_user = Auth::user()->id;
-        $vote = Vote::with(['candidates', 'candidates.voters', 'creator'])
+        $vote = Vote::with(['candidates', 'creator'])
             ->withCount('voters')
             ->where('id', $id)
             ->where('id_user', $id_user)
@@ -69,10 +69,10 @@ class VoteController extends Controller
         $validator = Validator::make($data, [
             'title'     => 'required|string',
             'name.*'    => 'required|string',
-            'image.*'   => 'image|max:2048'
+            'image.*'   => 'nullable|mimes:jpeg,jpg,png,gif|max:2048'
         ]);
 
-        Log::channel('stderr')->info($data);
+        
 
         if (!$validator->fails()) {
             $newVote = new Vote();
@@ -110,10 +110,10 @@ class VoteController extends Controller
         $data = $request->all();
         $validator = Validator::make($data, [
             'title'     => 'required|string',
-            'id.*'      => 'required|numeric|nullable',
+            'id.*'      => 'nullable',
             'is_delete.*'  => 'required|boolean',
             'name.*'    => 'required|string|nullable',
-            'image.*'   => 'required|image|max:2048|nullable'
+            'image.*'   => 'nullable'
         ]);
 
         if (!$validator->fails()) {
@@ -128,7 +128,7 @@ class VoteController extends Controller
                     $id_candidate = $data['id'][$index] ?? false;
                     if ($id_candidate) {
                         $candidate =  VoteCandidate::find($id_candidate);
-                        SharedUtils::deleteImage($candidate->image);
+                        $candidate->image && SharedUtils::deleteImage($candidate->image);
                         if ($is_delete) {
                             $candidate->delete();
                             continue;
@@ -138,7 +138,10 @@ class VoteController extends Controller
                     $candidate->id_vote = $id;
 
                     if (($data['image'] ?? [])[$index] ?? false) {
-                        $candidate->image = SharedUtils::saveImage($data['image'][$index]);
+                        $candidate->image = SharedUtils::saveImage($request->file('image')[$index]);
+                    }
+                    else{
+                        $candidate->image = null;
                     }
 
                     $candidate->save();
@@ -164,7 +167,7 @@ class VoteController extends Controller
     public function destroy($id)
     {
         $id_user = Auth::user()->id;
-        $vote = Vote::select('title')
+        $vote = Vote::select('title','id')
             ->where('id', $id)
             ->where('id_user', $id_user)
             ->first();
@@ -179,12 +182,6 @@ class VoteController extends Controller
                 $image = $candidate['image'];
                 SharedUtils::deleteImage(($image));
             }
-            UserVote::where('id_vote', $id)
-                ->delete();
-            VoteCandidate::where('id_vote', $id)
-                ->delete();
-            VoteLink::where('id_vote', $id)
-                ->delete();
             $vote->delete();
 
             return response()->json([
