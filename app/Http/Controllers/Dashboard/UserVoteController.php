@@ -18,11 +18,20 @@ class UserVoteController extends Controller
      */
     public function show($key)
     {
-        $link = Link::with('votes', 'votes.candidates')
+        Log::channel('stderr')->info("ASUUUW");
+        $id_user = Auth::user()->id;
+        $link = Link::with([
+            'votes', 
+            'votes.candidates',
+            'votes.voters' => function ($query) use ($id_user) {
+                $query->select('vote_candidates.name AS candidate', 'vote_candidates.updated_at')
+                    ->join('vote_candidates', 'user_votes.id_candidate', 'vote_candidates.id')
+                    ->where('id_user', $id_user);
+            }
+        ])
             ->where('key', $key)
-            ->take(1)
             ->get()
-            ->all() ?? false;
+            ->first() ?? false;
 
         if ($link) {
             return response()->json(['data' => $link], 200);
@@ -53,6 +62,7 @@ class UserVoteController extends Controller
             ->take(1)
             ->get()
             ->all()[0] ?? false;
+            
         if ($link) {
             $vote = $link['votes'][$order] ?? false;
             if ($vote && count($vote['candidates'])) {

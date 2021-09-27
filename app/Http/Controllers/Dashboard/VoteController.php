@@ -41,7 +41,7 @@ class VoteController extends Controller
     public function show($id)
     {
         $id_user = Auth::user()->id;
-        $vote = Vote::with(['candidates', 'creator'])
+        $vote = Vote::with(['candidates.voters', 'creator'])
             ->withCount('voters')
             ->where('id', $id)
             ->where('id_user', $id_user)
