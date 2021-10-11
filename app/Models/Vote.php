@@ -21,7 +21,7 @@ class Vote extends Model
 
     public function voters()
     {
-        return $this->hasMany(UserVote::class, 'id_vote', 'id')
-            ->select('id', 'name', 'email');
+        return $this->hasMany(UserVote::class, 'id_vote', 'id');
+            // ->select('id', 'name', 'email');
     }
 }

@@ -16,12 +16,14 @@ class CreateVoteLinksTable extends Migration
         Schema::create('vote_links', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             // fields
+            $table->id();
             $table->bigInteger('id_vote')->unsigned();
             $table->bigInteger('id_link')->unsigned();
             $table->timestamps();
 
             // id and relations
-            $table->unique('id_vote', 'id_link');
+            // $table->unique('id_vote', 'id_link');
+            $table->unique('id');
             $table->foreign('id_vote')->references('id')->on('votes')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('id_link')->references('id')->on('links')->onUpdate('cascade')->onDelete('cascade');
         });

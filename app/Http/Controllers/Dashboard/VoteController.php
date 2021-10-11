@@ -44,11 +44,7 @@ class VoteController extends Controller
         $vote = Vote::with(['candidates.voters', 'creator'])
             ->withCount('voters')
             ->where('id', $id)
-            ->where('id_user', $id_user)
-            ->take(1)
-            ->get()
-            ->makeHidden('id_user')
-            ->all()[0] ?? false;
+            ->first() ?? false;
 
         if ($vote) {
             return response()->json(['data' => $vote], 200);
@@ -84,8 +80,18 @@ class VoteController extends Controller
                 $newCandidate = new VoteCandidate();
                 $newCandidate->id_vote = $newVote->id;
                 $newCandidate->name = $name;
-                if (($data['image'] ?? [])[$index] ?? false)
-                    $newCandidate->image = SharedUtils::saveImage($data['image'][$index]);
+                
+                if ($data['image'] ?? false) {
+                    foreach ($data['image'] as $file) {
+                        $fileExtension = $file->getClientOriginalExtension();
+                        $fileBaseName = basename($file->getClientOriginalName(), '.' . $fileExtension);
+                        if($data['name'][$index]."-".$data['title'] == $fileBaseName)
+                        $newCandidate->image = SharedUtils::saveImage($file);
+                    }
+                }
+                else{
+                    $newCandidate->image = null;
+                }
                 $newCandidate->save();
             }
 
@@ -108,6 +114,8 @@ class VoteController extends Controller
     public function edit(Request $request, $id)
     {
         $data = $request->all();
+        
+        // Log::channel('stderr')->info($data);
         $validator = Validator::make($data, [
             'title'     => 'required|string',
             'id.*'      => 'nullable',
@@ -137,8 +145,13 @@ class VoteController extends Controller
                     $candidate->name = $data['name'][$index];
                     $candidate->id_vote = $id;
 
-                    if (($data['image'] ?? [])[$index] ?? false) {
-                        $candidate->image = SharedUtils::saveImage($request->file('image')[$index]);
+                    if ($data['image'] ?? false) {
+                        foreach ($data['image'] as $file) {
+                            $fileExtension = $file->getClientOriginalExtension();
+                            $fileBaseName = basename($file->getClientOriginalName(), '.' . $fileExtension);
+                            if($data['name'][$index]."-".$data['title'] == $fileBaseName)
+                            $candidate->image = SharedUtils::saveImage($file);
+                        }
                     }
                     else{
                         $candidate->image = null;

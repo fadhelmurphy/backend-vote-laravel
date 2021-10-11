@@ -52,7 +52,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('{key}')->group(function () {
         Route::get('/', [UserVoteController::class, 'show']);
-        Route::post('/{order}', [UserVoteController::class, 'store']);
+        Route::post('/', [UserVoteController::class, 'store']);
     });
 });
 
