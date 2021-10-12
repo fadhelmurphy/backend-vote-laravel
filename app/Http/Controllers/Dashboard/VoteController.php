@@ -115,7 +115,6 @@ class VoteController extends Controller
     {
         $data = $request->all();
         
-        // Log::channel('stderr')->info($data);
         $validator = Validator::make($data, [
             'title'     => 'required|string',
             'id.*'      => 'nullable',
@@ -136,8 +135,12 @@ class VoteController extends Controller
                     $id_candidate = $data['id'][$index] ?? false;
                     if ($id_candidate) {
                         $candidate =  VoteCandidate::find($id_candidate);
-                        $candidate->image && SharedUtils::deleteImage($candidate->image);
+                        if($index < count($data['image']) && $data['image'][$index]=="hapus"){
+                            $candidate->image && SharedUtils::deleteImage($candidate->image);
+                            $candidate->image = null;
+                        }
                         if ($is_delete) {
+                            $candidate->image && SharedUtils::deleteImage($candidate->image);
                             $candidate->delete();
                             continue;
                         }
@@ -145,16 +148,13 @@ class VoteController extends Controller
                     $candidate->name = $data['name'][$index];
                     $candidate->id_vote = $id;
 
-                    if ($data['image'] ?? false) {
-                        foreach ($data['image'] as $file) {
+                    if ($request->file('image') ?? false) {
+                        foreach ($request->file('image') as $file) {
                             $fileExtension = $file->getClientOriginalExtension();
                             $fileBaseName = basename($file->getClientOriginalName(), '.' . $fileExtension);
                             if($data['name'][$index]."-".$data['title'] == $fileBaseName)
                             $candidate->image = SharedUtils::saveImage($file);
                         }
-                    }
-                    else{
-                        $candidate->image = null;
                     }
 
                     $candidate->save();
