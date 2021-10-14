@@ -108,7 +108,7 @@ class LinkController extends Controller
     public function edit(Request $request, $id)
     {
         $data = $request->all();
-        Log::info('test 1234');
+        // Log::info('test 1234');
         $validator = Validator::make($data, [
             // 'description' => 'string|required',
             'id' => 'required|array|min:1',
@@ -118,7 +118,7 @@ class LinkController extends Controller
         $link = Link::find($id);
         if ($link) {
             if (!$validator->fails()) {
-                // $link->description = $data['description'];
+                $link->key = $data['key'];
                 $link->save();
 
                 VoteLink::where('id_link', $id)->delete();
